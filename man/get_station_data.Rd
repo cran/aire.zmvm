@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_station_data.R
 \name{get_station_data}
 \alias{get_station_data}
-\title{Download pollution data}
+\title{Download pollution data by station}
 \usage{
 get_station_data(criterion, pollutant, year, progress = interactive())
 }
@@ -10,48 +10,78 @@ get_station_data(criterion, pollutant, year, progress = interactive())
 \item{criterion}{Type of data to download.
 \itemize{
  \item{"HORARIOS"}{ - Hourly data}
- \item{"MAXIMOS""}{ - Daily maximums}
+ \item{"MAXIMOS"}{ - Daily maximums}
  \item{"MINIMOS"}{ - Daily minimums}
 }}
 
 \item{pollutant}{The type of pollutant to download.
 \itemize{
- \item{"SO2"}{ - Dioxido de azufre (partes por billon)}
- \item{"CO"}{ - Monoxido de carbono (partes por millon)}
- \item{"NOX"}{ - Oxidos de nitrogeno (partes por billon)}
- \item{"NO2"}{ - Dioxido de nitrogeno (partes por billon)}
- \item{"NO"}{ - Oxido nitrico (partes por billon)}
- \item{"O3"}{ - Ozono (partes por billon)}
- \item{"PM10"}{ - Particulas menores a 10 micrometros (microgramos por metro cubico)}
- \item{"PM25"}{ - Particulas menores a 2.5 micrometros (microgramos por metro cubico)}
- \item{"WSP"}{ - Velocidad del viento (metros por segundo)}
- \item{"WDR"}{ - Direccion del viento (grados)}
- \item{"TMP"}{ - Temperatura ambiente (grados Celsius)}
- \item{"RH"}{ - Humedad relativa (porcentaje)}
+ \item{"SO2"}{ - Sulfur Dioxide (parts per billion)}
+ \item{"CO"}{ - Carbon Monoxide (parts per million)}
+ \item{"NOX"}{ - Nitrogen Oxides (parts per billion)}
+ \item{"NO2"}{ - Nitrogen Dioxide (parts per billion)}
+ \item{"NO"}{ - Nitric Oxide (parts per billion)}
+ \item{"O3"}{ - Ozone (parts per billion)}
+ \item{"PM10"}{ - Particulate matter 10 micrometers or less
+ (micrograms per cubic meter)}
+ \item{"PM25"}{ - Particulate matter 2.5 micrometers or less
+ (micrograms per cubic meter)}
+ \item{"WSP"}{ - Wind velocity (meters per second)}
+ \item{"WDR"}{ - Wind direction (degrees)}
+ \item{"TMP"}{ - Temperature (degrees Celsius)}
+ \item{"RH"}{ - Relative humidity (percentage)}
 }}
 
-\item{year}{a numeric vector containing the years for which to download data (the earliest possible value is 1986)}
+\item{year}{a numeric vector containing the years for which to download data
+(the earliest possible value is 1986)}
 
-\item{progress}{Whether to display a progress bar (TRUE or FALSE). By default it will only display in an interactive session.}
+\item{progress}{whether to display a progress bar (TRUE or FALSE).
+By default it will only display in an interactive session.}
 }
 \value{
-a data.frame with pollution data, when downloading "HORARIOS" the hours correspond the
-GMT+6 timezone
+A data.frame with pollution data. When downloading "HORARIOS" the
+hours correspond to the
+\emph{Etc/GMT+6} timezone, with no daylight saving time
 }
 \description{
-retrieve pollution data by station from the air quality server at \url{
-http://www.aire.cdmx.gob.mx/estadisticas-consultas/concentraciones/index.php} for 2016 data.
-For earlier years the archive files from \url{http://www.aire.cdmx.gob.mx/default.php?opc='aKBhnmI'&opcion=Zg==}
-are used
+Retrieve pollution data by station, in the original units, from the air quality
+server at
+\href{http://www.aire.cdmx.gob.mx/estadisticas-consultas/concentraciones/index.php}{Consulta de Concentraciones},
+or for earlier years use the archive files available from
+\href{http://www.aire.cdmx.gob.mx/default.php?opc='aKBhnmI'&opcion=Zg==}{Contaminante}, or
+\href{http://www.aire.cdmx.gob.mx/default.php?opc='aKBhnmI='&opcion=Zw==}{Meteorología} for
+meteorological data. There's a mistake in the 2016 wind speed data so for this year and
+only this year the alternative \href{http://www.aire.cdmx.gob.mx/default.php?opc='aKBi'}{Excel} file was used.
 }
+\details{
+Temperature (TMP) archive values are correct to one decimal place, but the
+most recent data is only available rounded to the nearest integer.
+}
+\section{Warning}{
+
+The data for the current month is in the process of being validated
+}
+
 \examples{
 \dontrun{
-## Download daily maximum PM10 data (particulate matter 10 micrometers or less in diameter)
-## from 2015 to 2016
+## Download daily maximum PM10 data (particulate matter 10 micrometers or
+## less in diameter) from 2015 to 2016
 df <- get_station_data("MAXIMOS", "PM10", 2015:2016)
 head(df)
+
 ## Download ozone concentration hourly data for 2016
 df2 <- get_station_data("HORARIOS", "O3", 2016)
+
+## Convert to local Mexico City time
+df2$mxc_time <- format(as.POSIXct(paste0(df2$date, " ", df2$hour, ":00"),
+                                  tz = "Etc/GMT+6"),
+                       tz = "America/Mexico_City")
 head(df2)
 }
+}
+\seealso{
+\code{\link{stations}} for a data.frame with the location and names
+of all polution measuring stations,
+
+Other raw data functions: \code{\link{get_station_month_data}}
 }
