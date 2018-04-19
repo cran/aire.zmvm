@@ -1,13 +1,13 @@
-88f3dc7affaaf710d6cac3e187982b67 *DESCRIPTION
+bfe0256b163d387fec29cccf4f172fba *DESCRIPTION
 a141f3230a35d9510759e66d40a3634e *LICENSE
-c9ff786d65e42f9acedc45f6aae12438 *NAMESPACE
-671ef6ce2e512e7aa93d09f3b1af7d53 *NEWS.md
+3e11f53c0b26f912d4901c9b69a7b2a1 *NAMESPACE
+1cee107024a4c10d42f5b1fd4944de1d *NEWS.md
 aa16e510f8d18ca82bff29c9a406fa92 *R/aire.zmvm-deprecated.R
 dbf9f475b7d3dbf5cc0e60a86f559f7a *R/aire.zmvm.R
 68ec1d70fb901020155aaa15bc82b89b *R/convert.R
 f52ce8a893b31a85bc4c4ac48925a122 *R/get_latest_imeca.R
-63c30cdb33946e05e5f32908534dd5f4 *R/get_station_data.R
-db1f18004bf83a84b039d8ea5b296a62 *R/get_station_imeca.R
+5e169f946769830b9fec78c955143fb8 *R/get_station_data.R
+9e86f8e1e1cf849e8e23e1d62a39033e *R/get_station_imeca.R
 7147af23f271dbd82d4525ad68af8474 *R/get_zone_imeca.R
 20fe4de676198fea6630d790c1cbc989 *R/idw360.R
 e372c05bfc7956a3b0d1dde1e67013bf *R/stations.R
@@ -21,7 +21,7 @@ affa0f3ee99126aebcbfbde2aac1662a *man/convert_to_imeca.Rd
 612f60cc7f6bff88c855ec479d79e118 *man/figures/README-unnamed-chunk-2-1.png
 39eab8f0c50e3b5a66ddd16d7e95bc31 *man/get_latest_imeca.Rd
 7a4ae34cd8f0f20d9465caafa4425f10 *man/get_station_data.Rd
-1973478723cfd9ceccf8484452c477cc *man/get_station_imeca.Rd
+12373ffa95e1c56152e9c9f45dbfce67 *man/get_station_imeca.Rd
 d3258a2fb702e51597fd2e554d612e4a *man/get_station_month_data.Rd
 7eeb5258eb71d0645a51bd9bca32a910 *man/get_zone_imeca.Rd
 464473a1c8d04214d17febcc2c3bf838 *man/idw360.Rd
