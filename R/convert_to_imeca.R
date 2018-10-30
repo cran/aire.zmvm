@@ -150,7 +150,7 @@ to_imeca <- function(contaminant, value) {
 #' \href{https://en.wikipedia.org/wiki/Índice_Metropolitano_de_la_Calidad_del_Aire}{IMECA}
 #'
 #' Air quality in Mexico City is reported in IMECAs (Índice Metropolitano de la
-#' Calidad del Aire), a dimensionless scale where all the pollutants can be
+#' Calidad del Aire), a dimensionless scale where all pollutants can be
 #' compared.
 #'
 #' Note that each pollutant has different averaging periods (see the arguments
@@ -163,9 +163,9 @@ to_imeca <- function(contaminant, value) {
 #'    Also \emph{Solicitud de Información} FOLIO 0112000033218
 #'
 #' @param pollutant type of pollutant. A vector of one or more of the following
-#'   options: \itemize{ \item{"SO2"}{ - Sulfur Dioxide (24 hour average)}
-#'   \item{"CO"}{ - Carbon Monoxide (8 hour average)} \item{"NO2"}{ - Nitrogen
-#'   Dioxide (1 hour average)} \item{"O3"}{ - Ozone (1 hour average)}
+#'   options: \itemize{ \item{"SO2"}{ - Sulfur Dioxide - ppb (24 hour average)}
+#'   \item{"CO"}{ - Carbon Monoxide - ppm (8 hour average)} \item{"NO2"}{ - Nitrogen
+#'   Dioxide - pbb (1 hour average)} \item{"O3"}{ - Ozone ppb (1 hour average)}
 #'   \item{"PM10"}{ - Particulate matter 10 micrometers or less (24 hour
 #'   average)} \item{"PM25"}{ - Particulate matter 2.5 micrometers or less (24
 #'   hour average)} }
@@ -178,6 +178,7 @@ to_imeca <- function(contaminant, value) {
 #'
 #' @return A vector containing the converted value in IMECAs
 #' @export
+#' @family convert functions
 #' @importFrom stats na.omit
 #' @examples
 #' ## IMECA is a dimensionless scale that allows for the comparison of

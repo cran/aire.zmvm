@@ -9,7 +9,7 @@ is.integer2 <- function(int) {
              identical(int, as.single(floor(int))),
            error = function(e) {
              FALSE
-             })
+           })
 }
 
 # test if date is in YYYY-MM-DD format
@@ -19,7 +19,7 @@ is.Date <- function(date, date.format = "%Y-%m-%d") {
   tryCatch(!is.na(as.Date(date, date.format)),
            error = function(e) {
              FALSE
-             })
+           })
 }
 
 # http://www.aire.cdmx.gob.mx/descargas/monitoreo/normatividad/NADF-009-AIRE-2006.pdf
@@ -36,13 +36,14 @@ round_away_from_zero <- function(r) {
   z * posneg
 }
 
-#' Title
+#' Recode pollutant abbreviations
 #'
-#' @param code
+#' @param pollutant type of pollutant (O3, SO2, etc)
 #'
 #' @return data.frame
 #' @export
 #' @importFrom dplyr recode
+#' @keywords internal
 .recode_pollutant <- function(pollutant) {
   recode(pollutant,
          "pm2" = "PM25",
@@ -61,13 +62,14 @@ round_away_from_zero <- function(r) {
          "PM2.5" = "PM25")
 }
 
-#' Title
+#' Recode numeric codes to concentration units (extended)
 #'
-#' @param code
+#' @param code numeric code for the the units
 #'
 #' @return data.frame
 #' @export
 #' @importFrom dplyr recode
+#' @keywords internal
 .recode_unit_code <- function(code) {
   recode(code,
          `1`  =	"ppb",
@@ -90,13 +92,14 @@ round_away_from_zero <- function(r) {
   )
 }
 
-#' Title
+#'  Recode numeric codes to concentration units
 #'
-#' @param code
+#' @param pollutant type of pollutant (O3, SO2, etc)
 #'
 #' @return data.frame
 #' @export
 #' @importFrom dplyr recode
+#' @keywords internal
 .recode_unit <- function(pollutant) {
   recode(pollutant,
          "pm2" = "\u00B5g/m\u00B3",
@@ -118,15 +121,17 @@ round_away_from_zero <- function(r) {
 #' from mph to m/s (when the original data were already in m/s)
 #'
 #'
+#' @param syear shortyear in YY format
 #' @return data.frame
 #' @export
 #' @importFrom stringr str_extract
 #' @importFrom readxl read_excel
 #' @importFrom tidyr gather
 #' @importFrom utils download.file unzip
-.get_archive_wsp_2016 <- function() {
+#' @keywords internal
+.get_archive_wsp <- function(syear) {
   download_loc <- paste0("http://148.243.232.112:8080/opendata/excel/",
-                         "REDMET/16REDMET.zip")
+                         "REDMET/", syear, "REDMET.zip")
 
   # unzip
   tmpdir <- tempdir()
@@ -141,7 +146,8 @@ round_away_from_zero <- function(r) {
 
   unzip(file.path(tmpdir, file), exdir = tmpdir)
   df <- read_excel(file.path(tmpdir,
-                             xls_files[which(xls_files == "2016WSP.xls")]),
+                             xls_files[which(xls_files == paste0("20", syear,
+                                                                 "WSP.xls"))]),
                    na = c("-99", ""))
   # Clean the data
   names(df)[1] <- "date"
