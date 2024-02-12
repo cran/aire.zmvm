@@ -1,7 +1,7 @@
 #' Download Pollution Archives
 #'
 #' Download the pollution files available at
-#' \href{http://www.aire.cdmx.gob.mx/default.php?opc=\%27aKBhnmI=\%27&opcion=Zg==}{Contaminante}
+#' \href{http://www.aire.cdmx.gob.mx/aire/default.php?opc=\%27aKBhnmI=\%27&opcion=Zg==}{Contaminante}
 #'
 #' @param year a numeric vector containing the years for which to download data
 #' (the earliest possible value is 2009)
@@ -20,7 +20,7 @@
 #' }
 download_pollution <- function(year, progress = interactive()) {
   get_data <- function(year) {
-    RAMA <- paste0("http://148.243.232.112:8080/",
+    RAMA <- paste0("http://datosabiertos.aire.cdmx.gob.mx:8080/",
                    "opendata/anuales_horarios_gz/contaminantes_")
     ## The files from 2012 onwards changed the name of the columns
     ## cve_station and cve_parameter to id_station and id_parameter
@@ -71,7 +71,7 @@ download_pollution <- function(year, progress = interactive()) {
 #' Download Meteorological Data Archives
 #'
 #' Download the files available at
-#' \href{http://www.aire.cdmx.gob.mx/default.php?opc=\%27aKBhnmI=\%27&opcion=Zw==}{Meteorología}
+#' \href{http://www.aire.cdmx.gob.mx/aire/default.php?opc=\%27aKBhnmI=\%27&opcion=Zw==}{Meteorología}
 #'
 #' @param year a numeric vector containing the years for which to download data
 #' (the earliest possible value is 1986)
@@ -90,7 +90,7 @@ download_pollution <- function(year, progress = interactive()) {
 #' }
 download_meteorological <- function(year, progress = interactive()) {
   get_data <- function(year) {
-    REDMET <- paste0("http://148.243.232.112:8080/",
+    REDMET <- paste0("http://datosabiertos.aire.cdmx.gob.mx:8080/",
                      "opendata/anuales_horarios_gz/meteorolog%C3%ADa_")
     ## The files from 2012 onwards changed the name of the columns
     ## cve_station and cve_parameter to id_station and id_parameter
@@ -123,11 +123,11 @@ download_meteorological <- function(year, progress = interactive()) {
   if (min(year) < 1986)
     stop("year must be greater or equal to 1986")
   ## Errors in 2016 and 2017 data
-  if (any(year %in% 2016))
-    warning(paste0("There may be errors in the 2016 wind speed data.",
-                   " It was incorrectly converted to mph. Use the function",
-                   " `get_station_data` to download the correct values"),
-            call. = FALSE)
+  # if (any(year %in% 2016))
+  #   warning(paste0("There may be errors in the 2016 wind speed data.",
+  #                  " It was incorrectly converted to mph. Use the function",
+  #                  " `get_station_data` to download the correct values"),
+  #           call. = FALSE)
   if (identical(progress, TRUE) && length(year) > 1) {
     p <- progress_bar$new(format = "  downloading [:bar] :percent eta: :eta",
                           total = length(year))
@@ -145,14 +145,14 @@ download_meteorological <- function(year, progress = interactive()) {
 #' Download Lead Pollution Archives
 #'
 #' Download data on lead pollution from the archives available at
-#' \href{http://www.aire.cdmx.gob.mx/default.php?opc=\%27aKBhnmE=\%27&r=aHR0cDovLzE0OC4yNDMuMjMyLjExMjo4MDgwL29wZW5kYXRhL3JlZF9tYW51YWwvcmVkX21hbnVhbF9wbG9tby5jc3Y=}{Plomo}
+#' \href{http://www.aire.cdmx.gob.mx/aire/default.php?opc=\%27aKBhnmE=\%27&r=aHR0cDovLzE0OC4yNDMuMjMyLjExMjo4MDgwL29wZW5kYXRhL3JlZF9tYW51YWwvcmVkX21hbnVhbF9wbG9tby5jc3Y=}{Plomo}
 #' and
-#' \href{http://www.aire.cdmx.gob.mx/default.php?opc=\%27aKBhnmE=\%27&r=aHR0cDovLzE0OC4yNDMuMjMyLjExMjo4MDgwL29wZW5kYXRhL3JlZF9tYW51YWwvcmVkX21hbnVhbF9wYXJ0aWN1bGFzX3N1c3AuY3N2}{Partículas suspendidas}
+#' \href{http://www.aire.cdmx.gob.mx/aire/default.php?opc=\%27aKBhnmE=\%27&r=aHR0cDovLzE0OC4yNDMuMjMyLjExMjo4MDgwL29wZW5kYXRhL3JlZF9tYW51YWwvcmVkX21hbnVhbF9wYXJ0aWN1bGFzX3N1c3AuY3N2}{Partículas suspendidas}
 #'
 #' @param type type of data to download.
 #' \itemize{
-#'  \item{"PbPST"}{}
-#'  \item{"PST, PM10, PM25"}{}
+#'  \item PbPST
+#'  \item PST, PM10, PM25
 #' }
 #'
 #' @return A data.frame with pollution data.
@@ -166,10 +166,10 @@ download_lead <- function(type) {
   if (!(identical("PbPST", type) || identical("PST, PM10, PM25", type)))
     stop("type should be 'PbPST', or 'PST, PM10, PM25'")
   if (type == "PbPST")
-    REDMA <- paste0("http://148.243.232.112:8080/opendata/red_manual/",
+    REDMA <- paste0("http://datosabiertos.aire.cdmx.gob.mx:8080/opendata/red_manual/",
                     "red_manual_plomo.csv")
   else if (type == "PST, PM10, PM25")
-    REDMA <- paste0("http://148.243.232.112:8080/opendata/red_manual/",
+    REDMA <- paste0("http://datosabiertos.aire.cdmx.gob.mx:8080/opendata/red_manual/",
                     "red_manual_particulas_susp.csv")
   df <- read_csv(str_c(REDMA),
                  skip = 8, progress = FALSE, col_types = list(
@@ -185,19 +185,19 @@ download_lead <- function(type) {
 #' Download Acid Rain Measurements Archives
 #'
 #' Download data on rainfall samples collected weekly during the rainy season, available at
-#' \href{http://www.aire.cdmx.gob.mx/default.php?opc=\%27aKBhnmE=\%27&r=aHR0cDovLzE0OC4yNDMuMjMyLjExMjo4MDgwL29wZW5kYXRhL3JlZGRhL2RlcG9zaXRvLmNzdg==}{Depósito}
+#' \href{http://www.aire.cdmx.gob.mx/aire/default.php?opc=\%27aKBhnmE=\%27&r=aHR0cDovLzE0OC4yNDMuMjMyLjExMjo4MDgwL29wZW5kYXRhL3JlZGRhL2RlcG9zaXRvLmNzdg==}{Depósito}
 #' and
-#' \href{http://www.aire.cdmx.gob.mx/default.php?opc=\%27aKBhnmE=\%27&r=aHR0cDovLzE0OC4yNDMuMjMyLjExMjo4MDgwL29wZW5kYXRhL3JlZGRhL2RlcG9zaXRvVC5jc3Y=}{Depósito}
+#' \href{http://www.aire.cdmx.gob.mx/aire/default.php?opc=\%27aKBhnmE=\%27&r=aHR0cDovLzE0OC4yNDMuMjMyLjExMjo4MDgwL29wZW5kYXRhL3JlZGRhL2RlcG9zaXRvVC5jc3Y=}{Depósito}
 #'
 #' @param type type of ion measurement
 #' \itemize{
-#'  \item{"DEPOSITO"}{ -  ion quantity deposition}
-#'  \item{"CONCENTRACION"}{ - ion concentration}
+#'  \item DEPOSITO -  ion quantity deposition
+#'  \item CONCENTRACION - ion concentration
 #' }
 #' @param deposition type of deposition to download
 #' \itemize{
-#'  \item{"TOTAL"}{ - Total deposition (1988-2000)}
-#'  \item{"HUMEDO"}{ - Wet and dry deposition (1997-)}
+#'  \item TOTAL - Total deposition (1988-2000)
+#'  \item HUMEDO - Wet and dry deposition (1997-)
 #' }
 #' @return A data.frame with deposition data.
 #' @export
@@ -217,16 +217,16 @@ download_deposition <- function(deposition, type) {
     stop("type should be 'DEPOSITO', or 'CONCENTRACION'")
   # Deposito humedo - deposito
   if (deposition == "HUMEDO" & type == "DEPOSITO")
-    REDDA <- "http://148.243.232.112:8080/opendata/redda/deposito.csv"
+    REDDA <- "http://datosabiertos.aire.cdmx.gob.mx:8080/opendata/redda/deposito.csv"
   # Deposito humedo - concentracion
   if (deposition == "HUMEDO" & type == "CONCENTRACION")
-    REDDA <- "http://148.243.232.112:8080/opendata/redda/concentracion.csv"
+    REDDA <- "http://datosabiertos.aire.cdmx.gob.mx:8080/opendata/redda/concentracion.csv"
   # Deposito total - deposito
   if (deposition == "TOTAL" & type == "DEPOSITO")
-    REDDA <- "http://148.243.232.112:8080/opendata/redda/depositoT.csv"
+    REDDA <- "http://datosabiertos.aire.cdmx.gob.mx:8080/opendata/redda/depositoT.csv"
   # Deposito total - concentracion
   if (deposition == "TOTAL" & type == "CONCENTRACION")
-    REDDA <- "http://148.243.232.112:8080/opendata/redda/concentracionT.csv"
+    REDDA <- "http://datosabiertos.aire.cdmx.gob.mx:8080/opendata/redda/concentracionT.csv"
   df <- read_csv(REDDA,
                  skip = 8, progress = FALSE, col_types = list(
                    Date = col_character(),
@@ -241,14 +241,14 @@ download_deposition <- function(deposition, type) {
 #' Download Ultraviolet Radiation Archives
 #'
 #' Download data on UVA and UVB from the pollution archives available at
-#' \href{http://www.aire.cdmx.gob.mx/default.php?opc=\%27aKBhnmI=\%27&opcion=bA==}{Radiación Solar (UVA)}
+#' \href{http://www.aire.cdmx.gob.mx/aire/default.php?opc=\%27aKBhnmI=\%27&opcion=bA==}{Radiación Solar (UVA)}
 #' and
-#' \href{http://www.aire.cdmx.gob.mx/default.php?opc=\%27aKBhnmI=\%27&opcion=bQ==}{Radiación Solar (UVB)}
+#' \href{http://www.aire.cdmx.gob.mx/aire/default.php?opc=\%27aKBhnmI=\%27&opcion=bQ==}{Radiación Solar (UVB)}
 #'
 #' @param type type of data to download.
 #' \itemize{
-#'  \item{"UVA"}{ - long wave ultraviolet A}
-#'  \item{"UVB"}{ - short wave ultraviolet B}
+#'  \item UVA - long wave ultraviolet A
+#'  \item UVB - short wave ultraviolet B
 #' }
 #' @param year a numeric vector containing the years for which to download data
 #' (the earliest possible value is 2000)
@@ -268,9 +268,9 @@ download_deposition <- function(deposition, type) {
 download_radiation <- function(type, year, progress = interactive()) {
   get_data <- function(year, type) {
     if (type == "UVA")
-      RADIACION <- "http://148.243.232.112:8080/opendata/radiacion/UVA_"
+      RADIACION <- "http://datosabiertos.aire.cdmx.gob.mx:8080/opendata/radiacion/UVA_"
     else if (type == "UVB")
-      RADIACION <- "http://148.243.232.112:8080/opendata/radiacion/UVB_"
+      RADIACION <- "http://datosabiertos.aire.cdmx.gob.mx:8080/opendata/radiacion/UVB_"
     df <- read_csv(str_c(RADIACION, year, ".csv"),
                    skip = 8, progress = FALSE, col_types = list(
                      Date = col_character(),
@@ -308,13 +308,13 @@ download_radiation <- function(type, year, progress = interactive()) {
 #' Download archives of the 24 hour averages of pollutants
 #'
 #' Data comes from
-#' \href{http://www.aire.cdmx.gob.mx/default.php?opc=\%27aKBhnmI=\%27&opcion=ag==}{Promedios de 24 horas de partículas suspendidas(PM10 Y PM2.5)} and
-#' \href{http://www.aire.cdmx.gob.mx/default.php?opc=\%27aKBhnmI=\%27&opcion=aQ==}{Promedios de 24 horas de Dióxido azufre}
+#' \href{http://www.aire.cdmx.gob.mx/aire/default.php?opc=\%27aKBhnmI=\%27&opcion=ag==}{Promedios de 24 horas de partículas suspendidas(PM10 Y PM2.5)} and
+#' \href{http://www.aire.cdmx.gob.mx/aire/default.php?opc=\%27aKBhnmI=\%27&opcion=aQ==}{Promedios de 24 horas de Dióxido azufre}
 #'
 #' @param type  type of data to download.
 #' \itemize{
-#'  \item{"SO2"}{ - Sulfur Dioxide (parts per billion)}
-#'  \item{"PS"}{ - Suspended solids}
+#'  \item SO2 - Sulfur Dioxide (parts per billion)
+#'  \item PS - Suspended solids
 #' }
 #' @param year a numeric vector containing the years for which to download data
 #' (the earliest possible value is 1986 for SO2 and 1995 for PS)
@@ -333,10 +333,10 @@ download_radiation <- function(type, year, progress = interactive()) {
 download_24hr_average <- function(type, year, progress = interactive()) {
   get_data <- function(year, type) {
     if (type == "PS")
-      base_url <- paste0("http://148.243.232.112:8080/opendata/",
+      base_url <- paste0("http://datosabiertos.aire.cdmx.gob.mx:8080/opendata/",
                          "promedios_diarios/promedios_")
     else if (type == "SO2")
-      base_url <- paste0("http://148.243.232.112:8080/opendata/",
+      base_url <- paste0("http://datosabiertos.aire.cdmx.gob.mx:8080/opendata/",
                          "promedios_diarios/promedios_")
 
     df <- read_csv(str_c(base_url, year, "_", tolower(type), ".csv"),
@@ -379,7 +379,7 @@ download_24hr_average <- function(type, year, progress = interactive()) {
 
 #' Download Atmospheric Pressure Archives
 #'
-#' The data comes from \href{http://www.aire.cdmx.gob.mx/default.php?opc=\%27aKBhnmI=\%27&opcion=bg==}{Presión Atmosférica}
+#' The data comes from \href{http://www.aire.cdmx.gob.mx/aire/default.php?opc=\%27aKBhnmI=\%27&opcion=bg==}{Presión Atmosférica}
 #'
 #' @param year a numeric vector containing the years for which to download data
 #' (the earliest possible value is 2009)
@@ -397,7 +397,7 @@ download_24hr_average <- function(type, year, progress = interactive()) {
 #' }
 download_pressure <- function(year, progress = interactive()) {
   get_data <- function(year) {
-    PRESION <- "http://148.243.232.112:8080/opendata/presion/PA_"
+    PRESION <- "http://datosabiertos.aire.cdmx.gob.mx:8080/opendata/presion/PA_"
     df <- read_csv(str_c(PRESION, year, ".csv"),
                    skip = 8, progress = FALSE,
                    col_types = list(

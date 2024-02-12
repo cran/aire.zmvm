@@ -1,3 +1,18 @@
+# aire.zmvm 0.9.0
+
+## Bugs fixes and improvements
+
+* Fixed `get_latest_imeca` because values are no longer provided from the
+  report page
+* Fixes `get_station_imeca` because the url to download the data changed
+* `get_station_imeca` and `get_zone_imeca` can now download PM25 data
+* Correct the pollutant code for PM25 to match other functions when using `get_latest_data`
+* Change the address to download archive data in the `download_*` functions
+* The 2016 wind speed data with errors has been corrected at the source, so
+  functions that download it no longer give warnings.
+* Fixed `get_station_imeca` beacause it returned an error when 
+  requesting a pollutant that wasn't O3 .
+
 # aire.zmvm 0.8.2
 
 ## New features

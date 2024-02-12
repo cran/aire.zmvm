@@ -8,7 +8,7 @@
 #' Note that in 2015 it was determined that the stations with codes ACO, AJU,
 #' INN, MON and MPA would no longer be taken into consideration when computing
 #' the pollution index because they didn't meet the
-#' \href{http://www.aire.cdmx.gob.mx/objetivos-monitoreo-calidad-aire.html}{objectives
+#' \href{http://www.aire.cdmx.gob.mx/aire/objetivos-monitoreo-calidad-aire.html}{objectives
 #' of monitoring air quality}, and are no longer included in the index, even if
 #' they are still part of the SIMAT (Sistema de Monitoreo Atmosférico de la
 #' Ciudad de México). Thus, even if they are located inside a zone, they are not
@@ -16,11 +16,12 @@
 #'
 #' @param pollutant The type of pollutant to download
 #' \itemize{
-#'  \item{"SO2"}{ - Sulfur Dioxide}
-#'  \item{"CO"}{ - Carbon Monoxide}
-#'  \item{"NO2"}{ - Nitrogen Dioxide}
-#'  \item{"O3"}{ - Ozone}
-#'  \item{"PM10"}{ - Particulate matter 10 micrometers or less}
+#'  \item SO2 - Sulfur Dioxide
+#'  \item CO - Carbon Monoxide
+#'  \item NO2 - Nitrogen Dioxide
+#'  \item O3 - Ozone
+#'  \item PM10 - Particulate matter 10 micrometers or less
+#'  \item PM25 - Particulate matter 2.5 micrometers or less
 #' }
 #' @param date The date for which to download data in YYYY-MM-DD format
 #' (the earliest possible date is 2009-01-01).
@@ -31,7 +32,7 @@
 #' saving time
 #' @export
 #' @family IMECA functions
-#' @seealso \href{http://www.aire.cdmx.gob.mx/default.php?opc='aqBjnmc='}{Índice de calidad del aire por estaciones}
+#' @seealso \href{http://www.aire.cdmx.gob.mx/aire/default.php?opc='aqBjnmc='}{Índice de calidad del aire por estaciones}
 #' @importFrom rvest html_nodes html_table
 #' @importFrom xml2 read_html
 #' @importFrom tidyr gather
@@ -61,9 +62,9 @@ get_station_imeca <- function(pollutant, date,
     stop("date should be a date in YYYY-MM-DD format", call. = FALSE)
   if (date < "2009-01-01")
     stop("date should be after 2009-01-01", call. = FALSE)
-  if (!(identical("O3", pollutant) || identical("NO2", pollutant) |
-      identical("SO2", pollutant) || identical("CO", pollutant) |
-      identical("PM10", pollutant)))
+  if (!(identical("O3", pollutant) || identical("NO2", pollutant) ||
+      identical("SO2", pollutant) || identical("CO", pollutant) ||
+      identical("PM10", pollutant) || identical("PM25", pollutant) ))
      stop("Invalid pollutant value", call. = FALSE)
 
   if (date >= "2017-01-01" && show_messages)
@@ -71,7 +72,7 @@ get_station_imeca <- function(pollutant, date,
                    " ACO, AJU, INN, MON, and MPA were excluded from the",
                    " index"))
 
-  url <- "http://www.aire.cdmx.gob.mx/default.php?opc=%27aqBjnmc=%27"
+  url <- "http://www.aire.cdmx.gob.mx/aire/default.php?opc=%27aqBjnmI=%27"
   fd <- list(
     fecha       = date,
     RadioGroup1 = switch(pollutant,
@@ -79,7 +80,8 @@ get_station_imeca <- function(pollutant, date,
                          "NO2" = 1,
                          "SO2" = 2,
                          "CO" = 3,
-                         "PM10" = 4),
+                         "PM10" = 4,
+                         "PM25" = 5),
     aceptar     = "Submit",
     consulta    = 1
   )
@@ -96,7 +98,7 @@ get_station_imeca <- function(pollutant, date,
     ), call. = FALSE)
   if (http_type(result) != "text/html")
     stop(paste0(url, " did not return text/html", call. = FALSE))
-  poll_table <- read_html(content(result, "text"))
+  poll_table <- read_html(content(result, "text", encoding = "windows-1252"))
 
   df <- html_table(html_nodes(poll_table, "table")[[1]],
                           header = TRUE,
@@ -109,11 +111,15 @@ get_station_imeca <- function(pollutant, date,
   df$date <- date
   names(df)[1] <- "hour"
   ## There's an empty row at the end of the data
-  df <- df[3:(nrow(df)-1), ]
+  df <- df[3:(nrow(df) - 1), ]
+  ## Remove columns with NA for name
+  if (length(which(is.na(names(df)))))
+    df <- df[ , -which(is.na(names(df)))]
   df <- gather(df, station_code, value, -date, -hour)
   df[which(df$value == ""), "value"] <- NA
   df$value <- as.numeric(as.character(df$value))
   df$pollutant <- pollutant2
+  df$pollutant <- .recode_pollutant(df$pollutant)
   df$unit <- "IMECA"
   df[, c("date", "hour", "station_code", "pollutant", "unit", "value" )]
 }
