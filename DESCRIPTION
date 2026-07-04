@@ -1,7 +1,7 @@
 Type: Package
 Package: aire.zmvm
 Title: Download Mexico City Pollution, Wind, and Temperature Data
-Version: 1.0.1
+Version: 1.0.2
 Authors@R: 
     person("Diego", "Valle-Jones", , "diego@diegovalle.net", role = c("aut", "cre"))
 Description: Tools for downloading hourly averages, daily maximums and
@@ -19,10 +19,10 @@ Imports: dplyr, httr, lubridate, progress, readr, readxl, rvest, sp,
 Suggests: ggplot2, knitr, rmarkdown, testthat
 Encoding: UTF-8
 LazyData: TRUE
-RoxygenNote: 7.3.3
+Config/roxygen2/version: 8.0.0
 NeedsCompilation: no
-Packaged: 2026-03-05 12:52:31 UTC; diego
+Packaged: 2026-07-04 15:05:25 UTC; diego
 Author: Diego Valle-Jones [aut, cre]
 Maintainer: Diego Valle-Jones <diego@diegovalle.net>
 Repository: CRAN
-Date/Publication: 2026-03-05 13:10:09 UTC
+Date/Publication: 2026-07-04 15:40:02 UTC
